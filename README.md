@@ -1,36 +1,101 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Социальная сеть на Next.js
 
-## Getting Started
+Полнофункциональное приложение социальной сети, построенное с использованием Next.js, MongoDB и TailwindCSS.
 
-First, run the development server:
+## Функциональные возможности
+
+- Аутентификация (регистрация, вход, вход через Google)
+- Профили пользователей
+- Публикация постов с поддержкой изображений и видео
+- Лента новостей
+- Лайки и комментарии
+- Система подписок на пользователей
+- Чат в реальном времени
+- Настройки пользователя и безопасности
+
+## Технологии
+
+- [Next.js 15](https://nextjs.org/) - React-фреймворк для разработки веб-приложений
+- [MongoDB](https://www.mongodb.com/) - NoSQL база данных
+- [Mongoose](https://mongoosejs.com/) - ODM для работы с MongoDB
+- [TailwindCSS](https://tailwindcss.com/) - CSS-фреймворк для быстрой стилизации
+- [TypeScript](https://www.typescriptlang.org/) - типизированный JavaScript
+- [React Hot Toast](https://react-hot-toast.com/) - библиотека для уведомлений
+- [React Icons](https://react-icons.github.io/react-icons/) - коллекция иконок для React
+
+## Как настроить проект
+
+### 1. Клонирование репозитория
+
+```bash
+git clone <url-репозитория>
+cd social
+```
+
+### 2. Установка зависимостей
+
+```bash
+npm install
+```
+
+### 3. Настройка MongoDB Atlas
+
+1. Создайте аккаунт на [MongoDB Atlas](https://www.mongodb.com/cloud/atlas/register)
+2. Создайте новый кластер (бесплатный M0 подойдет для начала)
+3. Настройте доступ:
+   - Создайте пользователя БД с паролем
+   - Добавьте ваш IP в список разрешенных или разрешите доступ с любого IP (0.0.0.0/0) для разработки
+4. Получите строку подключения (Connection String)
+5. Заполните файл `.env.local` своими данными:
+
+```bash
+MONGODB_URI=mongodb+srv://Idris:76VcGRqWRx1Vii9L@cluster0.jpn4w.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+```
+
+### 4. Запуск проекта
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Приложение будет доступно по адресу: [http://localhost:3000](http://localhost:3000)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Структура проекта
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+src/
+├── app/                    # Страницы приложения Next.js
+│   ├── api/                # API маршруты
+│   ├── auth/               # Страницы аутентификации
+│   ├── create/             # Страница создания поста
+│   ├── feed/               # Лента новостей
+│   ├── messages/           # Чат
+│   ├── profile/            # Профиль пользователя
+│   └── settings/           # Настройки пользователя
+├── components/             # Общие компоненты
+│   ├── CreatePostForm.tsx  # Форма создания поста
+│   ├── Navigation.tsx      # Навигационная панель
+│   └── Post.tsx            # Компонент поста
+├── lib/                    # Бизнес-логика и сервисы
+│   ├── AuthContext.tsx     # Контекст аутентификации
+│   ├── mongodb.ts          # Подключение к MongoDB
+│   ├── posts-mongo.ts      # Функции для работы с постами
+│   └── users-mongo.ts      # Функции для работы с пользователями
+└── models/                 # Mongoose модели
+    ├── User.ts             # Модель пользователя
+    ├── Post.ts             # Модель поста
+    ├── Chat.ts             # Модель чата
+    └── Message.ts          # Модель сообщения
+```
 
-## Learn More
+## Дополнительные библиотеки
 
-To learn more about Next.js, take a look at the following resources:
+Для работы с MongoDB установлены следующие пакеты:
+- `mongoose` - ODM для MongoDB
+- `mongodb` - нативный драйвер MongoDB
+- `bcrypt` - для хеширования паролей
+- `jsonwebtoken` - для работы с JWT токенами
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Лицензия
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+MIT

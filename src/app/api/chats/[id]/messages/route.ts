@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getUserFromToken } from '@/lib/server-auth';
 import { connectToDatabase } from '@/lib/mongodb';
 import { getChatMessages, sendMessage, markMessagesAsRead } from '@/lib/chat-mongo';
+import { ApiError } from '@/lib/error-types';
 
 // GET - получение сообщений чата
 export async function GET(
@@ -42,12 +43,12 @@ export async function GET(
     
     // Возвращаем успешный ответ
     return NextResponse.json({ messages });
-  } catch (error: any) {
-    console.error(`Error in GET /api/chats/${params.id}/messages:`, error);
+  } catch (error: unknown) {
+    console.error(`Ошибка в GET /api/chats/${params.id}/messages:`, error);
     
-    // Возвращаем ошибку
+    const apiError = error as ApiError;
     return NextResponse.json(
-      { error: error.message || 'Ошибка при получении сообщений' },
+      { error: apiError.message || 'Ошибка при получении сообщений' },
       { status: 500 }
     );
   }
@@ -101,12 +102,12 @@ export async function POST(
     
     // Возвращаем успешный ответ
     return NextResponse.json({ message }, { status: 201 });
-  } catch (error: any) {
-    console.error(`Error in POST /api/chats/${params.id}/messages:`, error);
+  } catch (error: unknown) {
+    console.error(`Ошибка в POST /api/chats/${params.id}/messages:`, error);
     
-    // Возвращаем ошибку
+    const apiError = error as ApiError;
     return NextResponse.json(
-      { error: error.message || 'Ошибка при отправке сообщения' },
+      { error: apiError.message || 'Ошибка при отправке сообщения' },
       { status: 500 }
     );
   }

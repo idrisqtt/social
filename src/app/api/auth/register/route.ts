@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { connectToDatabase } from '@/lib/mongodb';
 import { registerUser } from '@/lib/auth-mongo';
+import { ApiError } from '@/lib/error-types';
 
 export async function POST(request: NextRequest) {
   try {
@@ -27,13 +28,16 @@ export async function POST(request: NextRequest) {
       { user, token },
       { status: 201 }
     );
-  } catch (error: any) {
-    console.error('Error in register route:', error);
+  } catch (error: unknown) {
+    console.error('Ошибка при регистрации:', error);
     
-    // Возвращаем ошибку
+    const apiError = error as ApiError;
+    const errorMessage = apiError.message || 'Ошибка при регистрации';
+    const status = apiError.message?.includes('уже существует') ? 409 : 500;
+    
     return NextResponse.json(
-      { error: error.message || 'Ошибка при регистрации пользователя' },
-      { status: 500 }
+      { error: errorMessage },
+      { status }
     );
   }
 } 

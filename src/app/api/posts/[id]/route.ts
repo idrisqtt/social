@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getUserFromToken } from '@/lib/server-auth';
 import { connectToDatabase } from '@/lib/mongodb';
 import { likePost, addComment } from '@/lib/posts-mongo';
+import { ApiError } from '@/lib/error-types';
 
 // PUT - лайк/дизлайк поста
 export async function PUT(
@@ -39,12 +40,12 @@ export async function PUT(
     
     // Возвращаем успешный ответ
     return NextResponse.json({ post: updatedPost });
-  } catch (error: any) {
-    console.error(`Error in PUT /api/posts/${params.id}:`, error);
+  } catch (error: unknown) {
+    console.error(`Ошибка в PUT /api/posts/${params.id}:`, error);
     
-    // Возвращаем ошибку
+    const apiError = error as ApiError;
     return NextResponse.json(
-      { error: error.message || 'Ошибка при обновлении поста' },
+      { error: apiError.message || 'Ошибка при обновлении поста' },
       { status: 500 }
     );
   }
@@ -98,12 +99,12 @@ export async function POST(
     
     // Возвращаем успешный ответ
     return NextResponse.json({ post: updatedPost });
-  } catch (error: any) {
-    console.error(`Error in POST /api/posts/${params.id}:`, error);
+  } catch (error: unknown) {
+    console.error(`Ошибка в POST /api/posts/${params.id}:`, error);
     
-    // Возвращаем ошибку
+    const apiError = error as ApiError;
     return NextResponse.json(
-      { error: error.message || 'Ошибка при добавлении комментария' },
+      { error: apiError.message || 'Ошибка при добавлении комментария' },
       { status: 500 }
     );
   }

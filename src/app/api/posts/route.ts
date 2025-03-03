@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getUserFromToken } from '@/lib/server-auth';
 import { connectToDatabase } from '@/lib/mongodb';
 import { createPost, getAllPosts } from '@/lib/posts-mongo';
+import { ApiError } from '@/lib/error-types';
 
 // GET - получение всех постов
 export async function GET(request: NextRequest) {
@@ -21,12 +22,12 @@ export async function GET(request: NextRequest) {
     
     // Возвращаем успешный ответ
     return NextResponse.json({ posts });
-  } catch (error: any) {
-    console.error('Error in GET /api/posts:', error);
+  } catch (error: unknown) {
+    console.error('Ошибка в GET /api/posts:', error);
     
-    // Возвращаем ошибку
+    const apiError = error as ApiError;
     return NextResponse.json(
-      { error: error.message || 'Ошибка при получении постов' },
+      { error: apiError.message || 'Ошибка при получении постов' },
       { status: 500 }
     );
   }
@@ -74,12 +75,12 @@ export async function POST(request: NextRequest) {
     
     // Возвращаем успешный ответ
     return NextResponse.json({ post }, { status: 201 });
-  } catch (error: any) {
-    console.error('Error in POST /api/posts:', error);
+  } catch (error: unknown) {
+    console.error('Ошибка в POST /api/posts:', error);
     
-    // Возвращаем ошибку
+    const apiError = error as ApiError;
     return NextResponse.json(
-      { error: error.message || 'Ошибка при создании поста' },
+      { error: apiError.message || 'Ошибка при создании поста' },
       { status: 500 }
     );
   }

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { connectToDatabase } from '@/lib/mongodb';
 import { signIn } from '@/lib/auth-mongo';
+import { ApiError } from '@/lib/error-types';
 
 export async function POST(request: NextRequest) {
   try {
@@ -27,20 +28,12 @@ export async function POST(request: NextRequest) {
       { user, token },
       { status: 200 }
     );
-  } catch (error: any) {
-    console.error('Error in login route:', error);
+  } catch (error: unknown) {
+    console.error('Ошибка при входе:', error);
     
-    // Различные ошибки могут требовать разных статус-кодов
-    if (error.message === 'Пользователь не найден' || error.message === 'Неверный пароль') {
-      return NextResponse.json(
-        { error: error.message },
-        { status: 401 }
-      );
-    }
-    
-    // Возвращаем общую ошибку
+    const apiError = error as ApiError;
     return NextResponse.json(
-      { error: error.message || 'Ошибка при входе в систему' },
+      { error: apiError.message || 'Ошибка при входе в систему' },
       { status: 500 }
     );
   }

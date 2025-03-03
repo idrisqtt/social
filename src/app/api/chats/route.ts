@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getUserFromToken } from '@/lib/server-auth';
 import { connectToDatabase } from '@/lib/mongodb';
 import { createChat, getUserChats } from '@/lib/chat-mongo';
+import { ApiError } from '@/lib/error-types';
 
 // GET - получение всех чатов пользователя
 export async function GET(request: NextRequest) {
@@ -33,12 +34,12 @@ export async function GET(request: NextRequest) {
     
     // Возвращаем успешный ответ
     return NextResponse.json({ chats });
-  } catch (error: any) {
-    console.error('Error in GET /api/chats:', error);
+  } catch (error: unknown) {
+    console.error('Ошибка в GET /api/chats:', error);
     
-    // Возвращаем ошибку
+    const apiError = error as ApiError;
     return NextResponse.json(
-      { error: error.message || 'Ошибка при получении чатов' },
+      { error: apiError.message || 'Ошибка при получении чатов' },
       { status: 500 }
     );
   }
@@ -94,12 +95,12 @@ export async function POST(request: NextRequest) {
     
     // Возвращаем успешный ответ
     return NextResponse.json({ chat }, { status: 201 });
-  } catch (error: any) {
-    console.error('Error in POST /api/chats:', error);
+  } catch (error: unknown) {
+    console.error('Ошибка в POST /api/chats:', error);
     
-    // Возвращаем ошибку
+    const apiError = error as ApiError;
     return NextResponse.json(
-      { error: error.message || 'Ошибка при создании чата' },
+      { error: apiError.message || 'Ошибка при создании чата' },
       { status: 500 }
     );
   }

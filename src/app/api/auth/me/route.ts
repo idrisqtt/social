@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { connectToDatabase } from '@/lib/mongodb';
 import { getUserByToken } from '@/lib/auth-mongo';
+import { ApiError } from '@/lib/error-types';
 
 export async function GET(request: NextRequest) {
   try {
@@ -35,12 +36,12 @@ export async function GET(request: NextRequest) {
       { user },
       { status: 200 }
     );
-  } catch (error: any) {
-    console.error('Error in me route:', error);
+  } catch (error: unknown) {
+    console.error('Ошибка при получении данных пользователя:', error);
     
-    // Возвращаем ошибку
+    const apiError = error as ApiError;
     return NextResponse.json(
-      { error: error.message || 'Ошибка при получении данных пользователя' },
+      { error: apiError.message || 'Ошибка при получении данных пользователя' },
       { status: 500 }
     );
   }
